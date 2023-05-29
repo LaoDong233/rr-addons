@@ -31,12 +31,14 @@ if [ "${1}" = "modules" ]; then
   /usr/bin/killall udevd
 elif [ "${1}" = "late" ]; then
   echo "Starting eudev daemon - late"
-  #copy modules
-  cp -rf /usr/lib/modules/* /tmpRoot/usr/lib/modules/
-  cp -rf /usr/lib/firmware/* /tmpRoot/usr/lib/firmware/
-  /usr/sbin/depmod -a -b /tmpRoot/
-  
-  # Copy rules
+  # The modules of SA6400 still have compatibility issues, temporarily canceling the copy. TODO: to be resolved
+  if [ "${MajorVersion}" -lt "7" -o "${MinorVersion}" -lt "2" ]; then
+    echo "copy modules"
+    cp -rf /usr/lib/modules/* /tmpRoot/usr/lib/modules/
+    cp -rf /usr/lib/firmware/* /tmpRoot/usr/lib/firmware/
+    /usr/sbin/depmod -a -b /tmpRoot/
+  fi
+  echo "Copy rules"
   cp -vf /usr/lib/udev/rules.d/* /tmpRoot/usr/lib/udev/rules.d/
   if [ "${MajorVersion}" -lt "7" ]; then # < 7
     mkdir -p /tmpRoot/etc/init
