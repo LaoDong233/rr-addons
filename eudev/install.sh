@@ -3,6 +3,8 @@
 # DSM version
 MajorVersion=`/bin/get_key_value /etc.defaults/VERSION majorversion`
 MinorVersion=`/bin/get_key_value /etc.defaults/VERSION minorversion`
+ModuleUnique=`/bin/get_key_value /etc.defaults/VERSION unique` # Avoid confusion with global variables
+
 echo "MajorVersion:${MajorVersion} MinorVersion:${MinorVersion}"
 
 if [ "${1}" = "modules" ]; then
@@ -32,7 +34,7 @@ if [ "${1}" = "modules" ]; then
 elif [ "${1}" = "late" ]; then
   echo "Starting eudev daemon - late"
   # The modules of SA6400 still have compatibility issues, temporarily canceling the copy. TODO: to be resolved
-  if [ "${MajorVersion}" -lt "7" -o "${MinorVersion}" -lt "2" ]; then
+  if [ ! "${ModuleUnique}" = "synology_epyc7002_sa6400" ]; then
     echo "copy modules"
     cp -rf /usr/lib/modules/* /tmpRoot/usr/lib/modules/
     cp -rf /usr/lib/firmware/* /tmpRoot/usr/lib/firmware/
