@@ -36,8 +36,8 @@ elif [ "${1}" = "late" ]; then
   # The modules of SA6400 still have compatibility issues, temporarily canceling the copy. TODO: to be resolved
   if [ ! "${ModuleUnique}" = "synology_epyc7002_sa6400" ]; then
     echo "copy modules"
-    cp -rnf /usr/lib/modules/* /tmpRoot/usr/lib/modules/
-    cp -rnf /usr/lib/firmware/* /tmpRoot/usr/lib/firmware/
+    export LD_LIBRARY_PATH=/tmpRoot/bin:/tmpRoot/lib; /tmpRoot/bin/cp -rnf /usr/lib/modules/* /tmpRoot/usr/lib/modules/
+    export LD_LIBRARY_PATH=/tmpRoot/bin:/tmpRoot/lib; /tmpRoot/bin/cp -rnf /usr/lib/firmware/* /tmpRoot/usr/lib/firmware/
     /usr/sbin/depmod -a -b /tmpRoot/
   fi
   echo "Copy rules"
