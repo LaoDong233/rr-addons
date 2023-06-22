@@ -1,6 +1,6 @@
 #!/usr/bin/env ash
 
-# https://github.com/xbl3/synocodectool-patch
+# https://github.com/wirgen/synocodectool-patch
 
 if [ "${1}" = "late" ]; then
   echo "Installing addon synocodec patch"

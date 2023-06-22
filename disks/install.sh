@@ -225,6 +225,7 @@ function dtModel() {
 function nondtModel() {
   local SATA_PORTS=0
   local SAS_PORTS=0
+  local SCSI_PORTS=0
   local NUMPORTS=0
   local ESATAPORTCFG=$((`_get_conf_kv esataportcfg`))
   local INTPORTCFG
