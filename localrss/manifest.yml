@@ -1,6 +1,6 @@
 version: 1
 name: localrss
-description: "local rss of bootloader pat"
+description: "Implant RSS into the bootloader so that it can be installed online"
 system: true
 all:
   install-script: "install.sh"
