@@ -16,7 +16,8 @@ available-for:
   broadwellnk-4.4.59:
   broadwellnk-4.4.180:
   broadwellnk-4.4.302:
-  epyc7002-5.10.55:
+  epyc7002-7.1-5.10.55:
+  epyc7002-7.2-5.10.55:
   denverton-4.4.59:
   denverton-4.4.180:
   denverton-4.4.302:
