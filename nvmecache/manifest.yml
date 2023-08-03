@@ -1,5 +1,5 @@
 version: 1
-name: hdddb
+name: nvmecache
 description: "Enable M2 cache of DS918+,DS1019+,DS1621xs+ (need reboot once), from PeterSuh-Q3" # https://github.com/PeterSuh-Q3/tcrp-addons/tree/main/nvme-cache
 all:
   install-script: "install.sh"

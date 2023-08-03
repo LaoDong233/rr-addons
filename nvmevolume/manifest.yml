@@ -1,5 +1,5 @@
 version: 1
-name: hdddb
+name: nvmevolume
 description: "Enable M2 volume, from 007revad" # https://github.com/007revad/Synology_enable_M2_volume
 all:
   install-script: "install.sh"
