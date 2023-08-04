@@ -7,13 +7,13 @@ if [ -z "${MLINK}" -o -z "${MCHECKSUM}" ]; then
 fi
 
 if [ "${1}" = "modules" ]; then
-echo "make localrss - modules"
+  echo "Installing addon localrss - modules"
 
-# MajorVersion=`/bin/get_key_value /etc.defaults/VERSION majorversion`
-# MinorVersion=`/bin/get_key_value /etc.defaults/VERSION minorversion`
-. /etc.defaults/VERSION
+  # MajorVersion=`/bin/get_key_value /etc.defaults/VERSION majorversion`
+  # MinorVersion=`/bin/get_key_value /etc.defaults/VERSION minorversion`
+  . /etc.defaults/VERSION
 
-cat > /usr/syno/web/localrss.json << EOF
+  cat >/usr/syno/web/localrss.json <<EOF
 {
   "version": "2.0",
   "channel": {
@@ -49,7 +49,7 @@ cat > /usr/syno/web/localrss.json << EOF
 }
 EOF
 
-cat > /usr/syno/web/localrss.xml << EOF
+  cat >/usr/syno/web/localrss.xml <<EOF
 <?xml version="1.0"?>
 <rss version="2.0">
   <channel>
@@ -79,13 +79,13 @@ cat > /usr/syno/web/localrss.xml << EOF
 </rss>
 EOF
 
-if [ -f /usr/syno/web/localrss.xml ]; then 
-  cat /usr/syno/web/localrss.xml
-  sed -i "s|rss_server=.*$|rss_server=\"http://localhost:5000/localrss.xml\"|g" "/etc/synoinfo.conf" "/etc.defaults/synoinfo.conf"
-  sed -i "s|rss_server_ssl=.*$|rss_server_ssl=\"http://localhost:5000/localrss.xml\"|g" "/etc/synoinfo.conf" "/etc.defaults/synoinfo.conf"
-fi
-if [ -f /usr/syno/web/localrss.json ]; then 
-  cat /usr/syno/web/localrss.json
-  sed -i "s|rss_server_v2=.*$|rss_server_v2=\"http://localhost:5000/localrss.json\"|g" "/etc/synoinfo.conf" "/etc.defaults/synoinfo.conf"
-fi
+  if [ -f /usr/syno/web/localrss.xml ]; then
+    cat /usr/syno/web/localrss.xml
+    sed -i "s|rss_server=.*$|rss_server=\"http://localhost:5000/localrss.xml\"|g" "/etc/synoinfo.conf" "/etc.defaults/synoinfo.conf"
+    sed -i "s|rss_server_ssl=.*$|rss_server_ssl=\"http://localhost:5000/localrss.xml\"|g" "/etc/synoinfo.conf" "/etc.defaults/synoinfo.conf"
+  fi
+  if [ -f /usr/syno/web/localrss.json ]; then
+    cat /usr/syno/web/localrss.json
+    sed -i "s|rss_server_v2=.*$|rss_server_v2=\"http://localhost:5000/localrss.json\"|g" "/etc/synoinfo.conf" "/etc.defaults/synoinfo.conf"
+  fi
 fi

@@ -1,9 +1,9 @@
 #!/usr/bin/env ash
 
 # DSM version
-MajorVersion=`/bin/get_key_value /etc.defaults/VERSION majorversion`
-MinorVersion=`/bin/get_key_value /etc.defaults/VERSION minorversion`
-ModuleUnique=`/bin/get_key_value /etc.defaults/VERSION unique` # Avoid confusion with global variables
+MajorVersion=$(/bin/get_key_value /etc.defaults/VERSION majorversion)
+MinorVersion=$(/bin/get_key_value /etc.defaults/VERSION minorversion)
+ModuleUnique=$(/bin/get_key_value /etc.defaults/VERSION unique) # Avoid confusion with global variables
 
 echo "MajorVersion:${MajorVersion} MinorVersion:${MinorVersion}"
 
@@ -18,10 +18,13 @@ if [ "${1}" = "modules" ]; then
       tar zxf /addons/eudev-7.2.tgz -C /
     fi
   fi
-  [ -e /proc/sys/kernel/hotplug ] && printf '\000\000\000\000' > /proc/sys/kernel/hotplug
+  [ -e /proc/sys/kernel/hotplug ] && printf '\000\000\000\000' >/proc/sys/kernel/hotplug
   chmod 755 /usr/sbin/udevd /usr/bin/kmod /usr/bin/udevadm /usr/lib/udev/*
   /usr/sbin/depmod -a
-  /usr/sbin/udevd -d || { echo "FAIL"; exit 1; }
+  /usr/sbin/udevd -d || {
+    echo "FAIL"
+    exit 1
+  }
   echo "Triggering add events to udev"
   udevadm trigger --type=subsystems --action=add
   udevadm trigger --type=devices --action=add
@@ -36,8 +39,9 @@ elif [ "${1}" = "late" ]; then
   # The modules of SA6400 still have compatibility issues, temporarily canceling the copy. TODO: to be resolved
   if [ ! "${ModuleUnique}" = "synology_epyc7002_sa6400" ]; then
     echo "copy modules"
-    export LD_LIBRARY_PATH=/tmpRoot/bin:/tmpRoot/lib; /tmpRoot/bin/cp -rnf /usr/lib/modules/* /tmpRoot/usr/lib/modules/
-    export LD_LIBRARY_PATH=/tmpRoot/bin:/tmpRoot/lib; /tmpRoot/bin/cp -rnf /usr/lib/firmware/* /tmpRoot/usr/lib/firmware/
+    export LD_LIBRARY_PATH=/tmpRoot/bin:/tmpRoot/lib
+    /tmpRoot/bin/cp -rnf /usr/lib/modules/* /tmpRoot/usr/lib/modules/
+    /tmpRoot/bin/cp -rnf /usr/lib/firmware/* /tmpRoot/usr/lib/firmware/
     /usr/sbin/depmod -a -b /tmpRoot/
   fi
   echo "Copy rules"

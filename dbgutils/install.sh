@@ -2,11 +2,11 @@
 
 function saveLogs() {
   modprobe vfat
-  echo 1 > /proc/sys/kernel/syno_install_flag
+  echo 1 >/proc/sys/kernel/syno_install_flag
   mount /dev/synoboot1 /mnt
   mkdir -p /mnt/logs/jr
   cp /var/log/* /mnt/logs/jr
-  dmesg > /mnt/logs/jr/dmesg
+  dmesg >/mnt/logs/jr/dmesg
   umount /mnt
 }
 
@@ -18,16 +18,17 @@ elif [ "${1}" = "jrExit" ]; then
 elif [ "${1}" = "rcExit" ]; then
   saveLogs
 elif [ "${1}" = "late" ]; then
+  echo "Installing addon dbgutils"
   echo "Killing ttyd..."
   /usr/bin/killall ttyd
   echo "Copying utils"
-  cp -vf /usr/bin/dtc    /tmpRoot/usr/bin/
+  cp -vf /usr/bin/dtc /tmpRoot/usr/bin/
   cp -vf /usr/bin/lsscsi /tmpRoot/usr/bin/
-  cp -vf /usr/bin/nano   /tmpRoot/usr/bin/
+  cp -vf /usr/bin/nano /tmpRoot/usr/bin/
   cp -vf /usr/bin/strace /tmpRoot/usr/bin/
-  cp -vf /usr/bin/lsof   /tmpRoot/usr/bin/
-  cp -vf /usr/sbin/ttyd  /tmpRoot/usr/sbin/
-  ln -sf /usr/bin/kmod   /tmpRoot/usr/sbin/modinfo
+  cp -vf /usr/bin/lsof /tmpRoot/usr/bin/
+  cp -vf /usr/sbin/ttyd /tmpRoot/usr/sbin/
+  ln -sf /usr/bin/kmod /tmpRoot/usr/sbin/modinfo
   saveLogs
   DEST="/tmpRoot/lib/systemd/system/savelogs.service"
 
