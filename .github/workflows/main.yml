@@ -59,7 +59,7 @@ jobs:
         with:
           name: addons
           path: |
-            addons.zip
+            *.addon
 
       - name: Release
         uses: softprops/action-gh-release@v1
