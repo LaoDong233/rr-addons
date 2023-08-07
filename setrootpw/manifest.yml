@@ -1,10 +1,10 @@
 version: 1
-name: localrss
-description: "Implant RSS into the bootloader so that it can be installed online"
-system: true
+name: setrootpw
+description: "Enable root permissions for ssh/sftp. Please modify PW=\"\" to the required password in the DSM scheduled task and execute it."
+# system: true
 all:
   install-script: "install.sh"
-  copy: "all"
+  copy: all
 available-for:
   apollolake-4.4.59:
   apollolake-4.4.180:
