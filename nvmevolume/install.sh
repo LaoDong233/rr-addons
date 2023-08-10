@@ -2,6 +2,7 @@
 
 if [ "${1}" = "late" ]; then
   echo "Installing daemon for nvmevolume"
+  cp -fv /usr/bin/bc /tmpRoot/usr/bin/bc
   cp -v /usr/bin/nvmevolume.sh /tmpRoot/usr/bin/nvmevolume.sh
 
   DEST="/tmpRoot/usr/lib/systemd/system/nvmevolume.service"
