@@ -199,7 +199,7 @@ function dtModel() {
     if [ $NUMPORTS -eq 1 ]; then
       # fix isSingleBay issue:
       #   if maxdisks is 1, there is no create button in the storage panel
-      NUMPORTS=2
+      NUMPORTS=26
     fi
     _set_conf_kv rd "maxdisks" "${NUMPORTS}"
     echo "maxdisks=${NUMPORTS}"
@@ -239,9 +239,10 @@ function nondtModel() {
   local SATA_PORTS=0
   local SAS_PORTS=0
   local SCSI_PORTS=0
+  local NVME_PORTS=0
   local NUMPORTS=0
   local ESATAPORTCFG=$(($(_get_conf_kv esataportcfg)))
-  local INTPORTCFG
+  local INTPORTCFG=$(($(_get_conf_kv internalportcfg)))
   local USBPORTCFG=$(($(_get_conf_kv usbportcfg)))
   local COUNT=1
   if _check_post_k "rd" "maxdisks"; then
@@ -252,11 +253,15 @@ function nondtModel() {
     SATA_PORTS=$(ls /sys/class/ata_port | wc -w)
     [ -d '/sys/class/sas_phy' ] && SAS_PORTS=$(ls /sys/class/sas_phy | wc -w)
     [ -d '/sys/class/scsi_disk' ] && SCSI_PORTS=$(ls /sys/class/scsi_disk | wc -w)
-    NUMPORTS=$((${SATA_PORTS} + ${SAS_PORTS} + ${SCSI_PORTS}))
+    [ -d '/sys/class/nvme' ] && NVME_PORTS=$(ls /sys/class/nvme | wc -w)
+    NUMPORTS=$((${SATA_PORTS} + ${SAS_PORTS} + ${SCSI_PORTS} + ${NVME_PORTS}))
     # Raidtool will read maxdisks, but when maxdisks is greater than 27, formatting error will occur 8%.
     if ! _check_rootraidstatus && [ ${NUMPORTS} -gt 26 ]; then
       _set_conf_kv rd "maxdisks" "26"
-      echo "set maxdisks=26"
+      echo "set maxdisks=26 [${NUMPORTS}]"
+    elif ! _check_rootraidstatus && [ ${NUMPORTS} -eq 1 ]; then
+      _set_conf_kv rd "maxdisks" "26"
+      echo "set maxdisks=26 [${NUMPORTS}]"
     else
       _set_conf_kv rd "maxdisks" "${NUMPORTS}"
       echo "set maxdisks=${NUMPORTS}"
@@ -268,7 +273,7 @@ function nondtModel() {
     echo "set internalportcfg=${INTPORTCFG}"
     echo "get esataportcfg=${ESATAPORTCFG}"
   fi
-  if ! _check_post_k "rd" "internalportcfg"; then
+  if ! _check_post_k "rd" "usbportcfg"; then
     # USB ports static, always 4 ports
     USBPORT_IDX=$(getNum0Bits ${USBPORTCFG})
     [ ${USBPORT_IDX} -lt ${NUMPORTS} ] && USBPORT_IDX=${NUMPORTS}

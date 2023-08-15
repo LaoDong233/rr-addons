@@ -17,6 +17,7 @@ for N in `cat "${FILE}.bak" | grep '\['`; do
   echo "${model}=yes" >> "${FILE}"
 done
 chmod a+rx "${FILE}"
+cp -f "${FILE}" "${FILE/\.defaults/}"
 
 # usb.map
 FILE="/usr/syno/etc.defaults/usb.map"
@@ -28,5 +29,6 @@ else
   mv -f "${FILE}.ids" "${FILE}"
   chmod a+rx "${FILE}"
 fi
+cp -f "${FILE}" "${FILE/\.defaults/}"
 
 exit 0
