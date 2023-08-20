@@ -1,6 +1,6 @@
 version: 1
 name: storagepanel
-description: "Modify storage panel (default: RACK_60_Bay)"
+description: "Modify storage panel (default: RACK_24_Bay M2X1)"
 all:
   install-script: "install.sh"
   copy: "all"

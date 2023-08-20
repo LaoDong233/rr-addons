@@ -32,6 +32,9 @@ if [ "${1}" = "late" ]; then
           if [ -n "$(cat /tmpRoot/root/i915.ko.hex)" ]; then
             ${XXD_PATH} -r -p /tmpRoot/root/i915.ko.hex >/tmpRoot/usr/lib/modules/i915.ko
             rm -f /tmpRoot/root/i915.ko.hex
+
+            rmmod i915
+            insmod /tmpRoot/usr/lib/modules/i915.ko
           else
             echo "Intel GPU is detected (${GPU}), replace i915.ko error"
           fi

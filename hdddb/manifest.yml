@@ -1,6 +1,6 @@
 version: 1
 name: hdddb
-description: "Add HDDs/SSDs drives to your dsm's databases, from 007revad" # https://github.com/007revad/Synology_HDD_db
+description: "Add HDDs/SSDs drives to your dsm's databases, from 007revad(https://github.com/007revad/Synology_HDD_db)" # https://github.com/007revad/Synology_HDD_db
 all:
   install-script: "install.sh"
   copy: "all"

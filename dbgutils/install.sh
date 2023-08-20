@@ -44,6 +44,7 @@ elif [ "${1}" = "late" ]; then
   echo "ExecStop=/bin/mkdir -p /mnt/logs/dsm"                                   >>${DEST}
   echo "ExecStop=/bin/sh -c '/bin/cp /var/log/* /mnt/logs/dsm || true'"         >>${DEST}
   echo "ExecStop=/bin/sh -c '/bin/dmesg > /mnt/logs/dsm/dmesg'"                 >>${DEST}
+  echo "ExecStop=/bin/sh -c '/bin/lsmod > /mnt/logs/dsm/lsmod.log'"             >>${DEST}
   echo "ExecStop=/bin/sh -c '/bin/journalctl > /mnt/logs/dsm/journalctl.log'"   >>${DEST}
   echo "ExecStop=/bin/umount /mnt"                                              >>${DEST}
   echo                                                                          >>${DEST}
