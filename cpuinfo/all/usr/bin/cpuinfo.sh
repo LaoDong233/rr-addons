@@ -571,7 +571,7 @@ then
     else
         READ_YN "Auto Excute, If you select n, proceed interactively  (Cancel : q) [y/n] : "
     fi
-    ' :
+    '
     if [ "$Y_N" == "y" ]
     then
         mkdir -p $BKUP_DIR/$TIME
@@ -1000,4 +1000,4 @@ else
         echo -e "Please select the correct number."
     fi
 fi
-' :
+'
