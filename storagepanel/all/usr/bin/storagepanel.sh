@@ -15,8 +15,8 @@
 #  RACK_12_Bay_2
 #  RACK_16_Bay
 #  RACK_20_Bay
-#  RACK_24_Bay
-#  RACK_60_Bay       # default
+#  RACK_24_Bay       # default
+#  RACK_60_Bay
 #  TOWER_1_Bay
 #  TOWER_2_Bay
 #  TOWER_4_Bay
@@ -26,9 +26,9 @@
 #  TOWER_6_Bay
 #  TOWER_8_Bay
 #  TOWER_12_Bay
-#  -r
+#  -r                # restore
 # $2 ?
-#  number            # default: 1X8
+#  (row)X(column)    # default: 1X8
 
 HDD_BAY="${1:-RACK_24_Bay}"
 SSD_BAY="${2:-1X8}"

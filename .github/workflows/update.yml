@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2022 Ing <https://github.com/wjz304>
-# 
+#
 # This is free software, licensed under the MIT License.
 # See /LICENSE for more information.
 #
@@ -17,15 +17,15 @@
 
 name: Update addons
 
-on:  
+on:
   workflow_dispatch:
     inputs:
-      push: 
-        description: 'push'
+      push:
+        description: "push"
         default: false
         type: boolean
-      eudev: 
-        description: 'update eudev'
+      eudev:
+        description: "update eudev"
         default: true
         type: boolean
 
@@ -34,13 +34,13 @@ jobs:
     strategy:
       matrix:
         include:
-          - version: 6.2 
+          - version: 6.2
             platform: apollolake
 
-          - version: 7.1 
+          - version: 7.1
             platform: apollolake
 
-          - version: 7.2 
+          - version: 7.2
             platform: apollolake
 
     if: inputs.eudev == true
@@ -53,8 +53,8 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          sudo timedatectl set-timezone "Asia/Shanghai" 
-          
+          sudo timedatectl set-timezone "Asia/Shanghai"
+
       # - name: Cache EnvDeploy
       #   id: cache-env
       #   uses: actions/cache@v3
@@ -65,7 +65,7 @@ jobs:
       #       ${{ github.workspace }}/pkgscripts-ng
       #       ${{ github.workspace }}/build_env
       #     key: ds.${{ matrix.platform }}-${{ matrix.version }}
-          
+
       - name: Get EnvDeploy
         # if: ${{ steps.cache-env.outputs.cache-hit != 'true' }}
         run: |
@@ -106,7 +106,7 @@ jobs:
             [ -f "/env64.mak" ] && echo "CCVER=${CCVER}" >> /env64.mak
           fi
           EOF
-          
+
           [ -f ${ENV_PATH}/env64.mak ] && ENV_FILE=${ENV_PATH}/env64.mak || ([ -f ${ENV_PATH}/env32.mak ] && ENV_FILE=${ENV_PATH}/env32.mak)
           if [ -n "${ENV_FILE}" ]; then
             KVER=`grep 'KVER=' ${ENV_FILE} | awk -F'=' '{print $2}'`
@@ -159,7 +159,7 @@ jobs:
             sed -i 's/for (size_t a/size_t a = 0; for(a/g; s/for (size_t i/size_t i = 0; for(i/g; s/for (uint16_t i/uint16_t i = 0; for(i/g' ./src/dmi_memory_id/dmi_memory_id.c
             sed -i 's/for (size_t pos/size_t pos = 0; for (pos/g; s/for (size_t i/size_t i = 0; for(i/g' ./src/fido_id/fido_id_desc.c
           fi
-          
+
           cp -vf /tmp/systemd/hwdb.d/*.ids /tmp/systemd/hwdb.d/*.hwdb hwdb/
           ./autogen.sh
           ./configure CC=${CC} --host=${HOST} --prefix=/usr --sysconfdir=/etc --disable-manpages --disable-selinux --disable-mtd_probe --enable-kmod
@@ -180,7 +180,6 @@ jobs:
 
           sudo cp -a ${ROOT_PATH}/build_env/ds.${{ matrix.platform }}-${{ matrix.version }}/source/output ${ROOT_PATH}/source/
           sudo chmod a+rw -R ${ROOT_PATH}/source/output
-    
 
       - name: Tar to Artifacts
         run: |
@@ -192,7 +191,7 @@ jobs:
           name: addons
           path: |
             ${{ github.workspace }}/source/*.tgz
-            
+
       - name: clean
         run: |
           sudo rm -rf ${{ github.workspace }}/build_env/ds.${{ matrix.platform }}-${{ matrix.version }}/source/*
@@ -209,7 +208,7 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          sudo timedatectl set-timezone "Asia/Shanghai" 
+          sudo timedatectl set-timezone "Asia/Shanghai"
 
       - name: download to artifacts
         uses: actions/download-artifact@v3
@@ -223,7 +222,7 @@ jobs:
             echo "Copy eudev ..."
             rm -rf eudev/all/addons/*
             mv -f artifacts/*.tgz eudev/all/addons/
-        
+
             echo "Git push ..."
             git pull
             status=$(git status -s | grep -E 'eudev/all/addons/' | awk '{printf " %s", $2}')
