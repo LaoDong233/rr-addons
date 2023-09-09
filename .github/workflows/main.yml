@@ -1,3 +1,10 @@
+#
+# Copyright (C) 2022 Ing <https://github.com/wjz304>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
+
 name: Build addons
 
 on:
@@ -10,6 +17,10 @@ on:
         description: "format %y.%-m.$i or auto"
         required: false
         type: string
+      prerelease:
+        description: "pre release"
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -28,13 +39,13 @@ jobs:
         run: |
           # Calculate version
           VERSION=""
-          if [ ${{ github.event_name }} == 'release' -a ${{ github.ref_type }} == 'tag' ]; then
+          if [[ "${{ github.event_name }}" =~ ^(push|release)$ && "${{ github.ref_type }}" == 'tag' ]]; then
             VERSION="${{ github.ref_name }}"
           elif [ -n "${{ inputs.version }}" ]; then
             if [ "`echo ${{ inputs.version }} | cut -d '.' -f 1,2`" = "`date +'%y.%-m'`" ]; then
               VERSION="${{ inputs.version }}"
             else
-              LATEST_TAG="`curl -skL "https://api.github.com/repos/${{ github.repository }}/releases/latest" | jq -r ".tag_name" 2>/dev/null`"
+              LATEST_TAG="`curl -skL "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r ".[0].tag_name" 2>/dev/null`"
               if [ -n "${LATEST_TAG}" -a "`echo ${LATEST_TAG} | cut -d '.' -f 1,2`" = "`date +'%y.%-m'`" ]; then  # format %y.%-m.$i
                 VERSION="`echo ${LATEST_TAG} | awk -F '.' '{$3=$3+1}1' OFS='.'`"
               else
@@ -66,4 +77,5 @@ jobs:
         if: env.VERSION != ''
         with:
           tag_name: ${{ env.VERSION }}
+          prerelease: ${{ inputs.prerelease }}
           files: addons.zip
