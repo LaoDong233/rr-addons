@@ -214,17 +214,12 @@ function dtModel() {
 }
 
 function nondtModel() {
-  MAXDISKS=$(($(_get_conf_kv maxdisks)))
-  INTERNALPORTCFG=$(($(_get_conf_kv internalportcfg)))
-  ESATAPORTCFG=$(($(_get_conf_kv esataportcfg)))
-  USBPORTCFG=$(($(_get_conf_kv usbportcfg)))
-
-  HBA_NUMBER=$(lspci -d ::107 2>/dev/null | wc -l)
-
   MAXDISKS=0
   USBPORTCFG=0
   ESATAPORTCFG=0
   INTERNALPORTCFG=0
+  HBA_NUMBER=$(lspci -d ::107 2>/dev/null | wc -l)
+
   for I in $(ls -d /sys/block/sd*); do
     IDX=$(_atoi ${I/\/sys\/block\/sd/})
     ISUSB="$(cat ${I}/uevent 2>/dev/null | grep PHYSDEVPATH | grep usb)"
@@ -233,18 +228,21 @@ function nondtModel() {
   done
 
   if _check_post_k "rd" "usbportcfg"; then
+    USBPORTCFG=$(($(_get_conf_kv usbportcfg)))
     echo "get usbportcfg=${USBPORTCFG}"
   else
     _set_conf_kv rd "usbportcfg" "$(printf '0x%.2x' ${USBPORTCFG})"
     echo "set usbportcfg=${USBPORTCFG}"
   fi
   if _check_post_k "rd" "esataportcfg"; then
+    ESATAPORTCFG=$(($(_get_conf_kv esataportcfg)))
     echo "get esataportcfg=${ESATAPORTCFG}"
   else
     _set_conf_kv rd "esataportcfg" "$(printf "0x%.2x" ${ESATAPORTCFG})"
     echo "set esataportcfg=${ESATAPORTCFG}"
   fi
   if _check_post_k "rd" "internalportcfg"; then
+    INTERNALPORTCFG=$(($(_get_conf_kv internalportcfg)))
     echo "get internalportcfg=${INTERNALPORTCFG}"
   else
     INTERNALPORTCFG=$(($((2 ** ${MAXDISKS} - 1)) ^ ${USBPORTCFG} ^ ${ESATAPORTCFG}))
@@ -253,6 +251,7 @@ function nondtModel() {
   fi
 
   if _check_post_k "rd" "maxdisks"; then
+    MAXDISKS=$(($(_get_conf_kv maxdisks)))
     echo "get maxdisks=${MAXDISKS}"
   else
     [ ${HBA_NUMBER} -gt 0 ] && MAXDISKS=26
@@ -300,16 +299,21 @@ elif [ "${1}" = "late" ]; then
   else
     echo "Adjust maxdisks and internalportcfg automatically"
     # sysfs is unpopulated here, get the values from junior synoinfo.conf
-    NUMPORTS=$(_get_conf_kv maxdisks)
-    INTPORTCFG=$(_get_conf_kv internalportcfg)
+    MAXDISKS=$(_get_conf_kv maxdisks)
     USBPORTCFG=$(_get_conf_kv usbportcfg)
-    _set_conf_kv hd "maxdisks" "${NUMPORTS}"
-    _set_conf_kv hd "internalportcfg" "${INTPORTCFG}"
-    _set_conf_kv hd "usbportcfg" "${USBPORTCFG}"
+    ESATAPORTCFG=$(_get_conf_kv esataportcfg)
+    INTERNALPORTCFG=$(_get_conf_kv internalportcfg)
     # log
-    echo "maxdisks=${NUMPORTS}"
-    echo "internalportcfg=${INTPORTCFG}"
+    echo "maxdisks=${MAXDISKS}"
     echo "usbportcfg=${USBPORTCFG}"
+    echo "esataportcfg=${ESATAPORTCFG}"
+    echo "internalportcfg=${INTERNALPORTCFG}"
+    # set
+    _set_conf_kv hd "maxdisks" "${MAXDISKS}"
+    _set_conf_kv hd "usbportcfg" "${USBPORTCFG}"
+    _set_conf_kv hd "esataportcfg" "${ESATAPORTCFG}"
+    _set_conf_kv hd "internalportcfg" "${INTERNALPORTCFG}"
+    # nvme
     cp -vf /etc/extensionPorts /tmpRoot/etc/extensionPorts
     cp -vf /etc/extensionPorts /tmpRoot/etc.defaults/extensionPorts
   fi
