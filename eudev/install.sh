@@ -43,13 +43,13 @@ if [ "${1}" = "modules" ]; then
 elif [ "${1}" = "late" ]; then
   echo "Starting eudev daemon - late"
   # The modules of SA6400 still have compatibility issues, temporarily canceling the copy. TODO: to be resolved
-  if [ ! "${ModuleUnique}" = "synology_epyc7002_sa6400" ]; then
+  #if [ ! "${ModuleUnique}" = "synology_epyc7002_sa6400" ]; then
     echo "copy modules"
     export LD_LIBRARY_PATH=/tmpRoot/bin:/tmpRoot/lib
-    /tmpRoot/bin/cp -rnf /usr/lib/modules/* /tmpRoot/usr/lib/modules/
     /tmpRoot/bin/cp -rnf /usr/lib/firmware/* /tmpRoot/usr/lib/firmware/
-    /usr/sbin/depmod -a -b /tmpRoot/
-  fi
+    #/tmpRoot/bin/cp -rnf /usr/lib/modules/* /tmpRoot/usr/lib/modules/
+    #/usr/sbin/depmod -a -b /tmpRoot/
+  #fi
   echo "Copy rules"
   cp -vf /usr/lib/udev/rules.d/* /tmpRoot/usr/lib/udev/rules.d/
   if [ "${MajorVersion}" -lt "7" ]; then # < 7
