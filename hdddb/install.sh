@@ -2,7 +2,7 @@
 
 if [ "${1}" = "late" ]; then
   echo "Installing daemon for hdddb"
-  cp -v /usr/bin/hdddb.sh /tmpRoot/usr/bin/hdddb.sh
+  cp -vf /usr/bin/hdddb.sh /tmpRoot/usr/bin/hdddb.sh
 
   DEST="/tmpRoot/usr/lib/systemd/system/hdddb.service"
   echo "[Unit]"                                    >${DEST}

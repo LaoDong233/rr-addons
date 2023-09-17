@@ -5,7 +5,7 @@ function saveLogs() {
   echo 1 >/proc/sys/kernel/syno_install_flag
   mount /dev/synoboot1 /mnt
   mkdir -p /mnt/logs/jr
-  cp /var/log/* /mnt/logs/jr
+  cp -vfR /var/log/* /mnt/logs/jr
   dmesg >/mnt/logs/jr/dmesg
   umount /mnt
 }
@@ -28,7 +28,7 @@ elif [ "${1}" = "late" ]; then
   cp -vf /usr/bin/strace /tmpRoot/usr/bin/
   cp -vf /usr/bin/lsof /tmpRoot/usr/bin/
   cp -vf /usr/sbin/ttyd /tmpRoot/usr/sbin/
-  ln -sf /usr/bin/kmod /tmpRoot/usr/sbin/modinfo
+  ln -vsf /usr/bin/kmod /tmpRoot/usr/sbin/modinfo
   saveLogs
   DEST="/tmpRoot/lib/systemd/system/savelogs.service"
 
@@ -42,7 +42,7 @@ elif [ "${1}" = "late" ]; then
   echo "ExecStop=/bin/sh -c '/bin/echo 1 > /proc/sys/kernel/syno_install_flag'" >>${DEST}
   echo "ExecStop=/bin/mount /dev/synoboot1 /mnt"                                >>${DEST}
   echo "ExecStop=/bin/mkdir -p /mnt/logs/dsm"                                   >>${DEST}
-  echo "ExecStop=/bin/sh -c '/bin/cp /var/log/* /mnt/logs/dsm || true'"         >>${DEST}
+  echo "ExecStop=/bin/sh -c '/bin/cp -vfR /var/log/* /mnt/logs/dsm || true'"    >>${DEST}
   echo "ExecStop=/bin/sh -c '/bin/dmesg > /mnt/logs/dsm/dmesg'"                 >>${DEST}
   echo "ExecStop=/bin/sh -c '/bin/lsmod > /mnt/logs/dsm/lsmod.log'"             >>${DEST}
   echo "ExecStop=/bin/sh -c '/bin/journalctl > /mnt/logs/dsm/journalctl.log'"   >>${DEST}
@@ -52,5 +52,5 @@ elif [ "${1}" = "late" ]; then
   echo "WantedBy=multi-user.target"                                             >>${DEST}
 
   mkdir -p /tmpRoot/lib/systemd/system/multi-user.target.wants
-  ln -sf /lib/systemd/system/savelogs.service /tmpRoot/lib/systemd/system/multi-user.target.wants/savelogs.service
+  ln -vsf /lib/systemd/system/savelogs.service /tmpRoot/lib/systemd/system/multi-user.target.wants/savelogs.service
 fi

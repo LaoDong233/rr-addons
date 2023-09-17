@@ -2,7 +2,7 @@
 
 if [ "${1}" = "late" ]; then
   echo "Installing daemon for CPU Info"
-  cp -v /usr/bin/cpuinfo.sh /tmpRoot/usr/bin/cpuinfo.sh
+  cp -vf /usr/bin/cpuinfo.sh /tmpRoot/usr/bin/cpuinfo.sh
 
   DEST="/tmpRoot/usr/lib/systemd/system/cpuinfo.service"
   echo "[Unit]"                               >${DEST}

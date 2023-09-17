@@ -4,7 +4,7 @@
 
 if [ "${1}" = "late" ]; then
   echo "Installing addon synocodec patch"
-  cp -v /usr/bin/codecpatch.sh /tmpRoot/usr/bin/codecpatch.sh
+  cp -vf /usr/bin/codecpatch.sh /tmpRoot/usr/bin/codecpatch.sh
 
   DEST="/tmpRoot/usr/lib/systemd/system/codecpatch.service"
   echo "[Unit]"                               >${DEST}

@@ -2,7 +2,7 @@
 
 if [ "${1}" = "late" ]; then
   echo "Installing daemon for addincards"
-  cp -v /usr/bin/addincards.sh /tmpRoot/usr/bin/addincards.sh
+  cp -vf /usr/bin/addincards.sh /tmpRoot/usr/bin/addincards.sh
 
   DEST="/tmpRoot/usr/lib/systemd/system/addincards.service"
   echo "[Unit]"                                        >${DEST}
