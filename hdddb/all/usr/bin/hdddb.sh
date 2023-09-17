@@ -455,7 +455,7 @@ done
 scriptpath=$( cd -P "$( dirname "$source" )" >/dev/null 2>&1 && pwd )
 #echo "Script location: $scriptpath"  # debug
 
-
+FUNC_ANNOTATION () {
 if ! printf "%s\n%s\n" "$tag" "$scriptver" |
         sort --check --version-sort >/dev/null ; then
     echo -e "\n${Cyan}There is a newer version of this script available.${Off}"
@@ -567,7 +567,7 @@ if ! printf "%s\n%s\n" "$tag" "$scriptver" |
         fi
     fi
 fi
-
+}
 
 #------------------------------------------------------------------------------
 # Restore changes from backups
