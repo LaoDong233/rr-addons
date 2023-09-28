@@ -8,6 +8,10 @@
 
 if [ "${1}" = "late" ]; then
   echo "Installing addon reboottoarpl - late"
+
+  cp -vf /usr/bin/arpl-reboot.sh /tmpRoot/usr/bin
+  cp -vf /usr/bin/grub-editenv /tmpRoot/usr/bin
+
   if [ ! -f /tmpRoot/usr/syno/etc/esynoscheduler/esynoscheduler.db ]; then
     echo "copy esynoscheduler.db"
     mkdir -p /tmpRoot/usr/syno/etc/esynoscheduler

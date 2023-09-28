@@ -7,10 +7,6 @@ if [ "${1}" = "late" ]; then
   XXD_PATH='/tmpRoot/usr/bin/xxd'
   LSPCI_PATH='/tmpRoot/usr/bin/lspci'
 
-  # Copy utilities to dsm partition
-  cp -vf /usr/bin/arpl-reboot.sh /tmpRoot/usr/bin
-  cp -vf /usr/bin/grub-editenv /tmpRoot/usr/bin
-
   mount -t sysfs sysfs /sys
   modprobe acpi-cpufreq
   # CPU performance scaling
@@ -61,4 +57,11 @@ if [ "${1}" = "late" ]; then
       echo "NVIDIA GPU is detected, nothing to do"
     fi
   fi
+
+  # network
+  for I in `seq 0 7`; do
+    if [ -f "/etc/sysconfig/network-scripts/ifcfg-eth${I}" ] && [ ! -f "/tmpRoot/etc.defaults/sysconfig/network-scripts/ifcfg-eth${I}" ]; then
+      cp -vf "/etc/sysconfig/network-scripts/ifcfg-eth${I}" "/tmpRoot/etc.defaults/sysconfig/network-scripts/ifcfg-eth${I}"
+    fi
+  done
 fi
