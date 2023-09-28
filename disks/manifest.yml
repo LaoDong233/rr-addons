@@ -1,7 +1,7 @@
 version: 1
 name: disks
-system: true
 description: "Config disks related setting"
+system: true
 all:
   install-script: "install.sh"
   copy: "all"
@@ -17,6 +17,11 @@ available-for:
   broadwellnk-4.4.59:
   broadwellnk-4.4.180:
   broadwellnk-4.4.302:
+  broadwellnkv2-4.4.180:
+  broadwellnkv2-4.4.302:
+  broadwellntbap-4.4.59:
+  broadwellntbap-4.4.180:
+  broadwellntbap-4.4.302:
   epyc7002-7.1-5.10.55:
   epyc7002-7.2-5.10.55:
   denverton-4.4.59:
