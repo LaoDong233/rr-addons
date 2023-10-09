@@ -31,8 +31,8 @@ if ! echo ${models[@]} | grep -q ${model}; then
   exit 0
 fi
 
-[ ! -f /usr/lib/libsynonvme.so.1.bak ] && cp -f /usr/lib/libsynonvme.so.1 /usr/lib/libsynonvme.so.1.bak && chmod a+rwx /usr/lib/libsynonvme.so.1.bak
-
+[ ! -f /usr/lib/libsynonvme.so.1.bak ] && cp -vfp /usr/lib/libsynonvme.so.1 /usr/lib/libsynonvme.so.1.bak
+cp -vfp /usr/lib/libsynonvme.so.1.bak /usr/lib/libsynonvme.so.1
 num=1
 for N in `ls /sys/class/nvme`; do
   PCISTR=`readlink /sys/class/nvme/${N} | sed 's|^.*\(pci.*\)|\1|' | cut -d'/' -f2`
