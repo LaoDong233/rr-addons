@@ -21,22 +21,23 @@ if [ "${1}" = "patches" ]; then
     MACS=$(echo "${2}" | sed 's/://g' | tr '[:upper:]' '[:lower:]' | tr ',' ' ')
     ETHLISTTMPC=""
     ETHLISTTMPF=""
+
+    for MACX in ${MACS}; do
+      ETHLISTTMPC="${ETHLISTTMPC}$(echo -e "${ETHLIST}" | grep "${MACX}")\n"
+    done
+
     while read -r BUS MAC ETH; do
       [ -z "${MAC}" ] && continue
-      for MACX in ${MACS}; do
-        if [ "${MAC}" = "${MACX}" ]; then
-          ETHLISTTMPC="${ETHLISTTMPC}${BUS} ${MAC} ${ETH}\n"
-        else
-          ETHLISTTMPF="${ETHLISTTMPF}${BUS} ${MAC} ${ETH}\n"
-        fi
-      done
+      if echo "${MACS}" | grep -q "${MAC}"; then continue; fi
+      ETHLISTTMPF="${ETHLISTTMPF}${BUS} ${MAC} ${ETH}\n"
     done <<EOF
 $(echo -e ${ETHLIST} | sort)
 EOF
     ETHLIST="${ETHLISTTMPC}${ETHLISTTMPF}"
   else
-    ETHLIST="$(echo -e "${ETHLIST}" | sort | grep -v '^$')"
+    ETHLIST="$(echo -e "${ETHLIST}" | sort)"
   fi
+  ETHLIST="$(echo -e "${ETHLIST}" | grep -v '^$')"
 
   echo -e "${ETHLIST}" > /tmp/ethlist
   cat /tmp/ethlist
@@ -48,8 +49,7 @@ EOF
     [ ${IDX} -ge $(wc -l < /tmp/ethlist) ] && break
     ETH=$(cat /tmp/ethlist | sed -n "$((${IDX} + 1))p" | awk '{print $3}')
     echo "ETH: ${ETH}"
-    [ -z "${ETH}" ] && continue
-    if [ ! "${ETH}" = "eth${IDX}" ]; then
+    if [ -n "${ETH}" ] && [ ! "${ETH}" = "eth${IDX}" ]; then
       echo "change ${ETH} <=> eth${IDX}"
       ip link set dev eth${IDX} down
       ip link set dev ${ETH} down
