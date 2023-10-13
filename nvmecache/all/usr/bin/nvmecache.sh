@@ -32,7 +32,9 @@ if ! echo ${models[@]} | grep -q ${model}; then
 fi
 
 [ ! -f /usr/lib/libsynonvme.so.1.bak ] && cp -vfp /usr/lib/libsynonvme.so.1 /usr/lib/libsynonvme.so.1.bak
-cp -vfp /usr/lib/libsynonvme.so.1.bak /usr/lib/libsynonvme.so.1
+
+# cp -vfp /usr/lib/libsynonvme.so.1.bak /usr/lib/libsynonvme.so.1  # TODO: Because so was called, rewriting resulted in coredump, so I need to find another way.
+
 num=1
 for N in `ls /sys/class/nvme`; do
   PCISTR=`readlink /sys/class/nvme/${N} | sed 's|^.*\(pci.*\)|\1|' | cut -d'/' -f2`
