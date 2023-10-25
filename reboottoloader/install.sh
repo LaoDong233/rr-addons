@@ -7,7 +7,7 @@
 #
 
 if [ "${1}" = "late" ]; then
-  echo "Installing addon reboottoarpl - late"
+  echo "Installing addon reboottoloader - late"
 
   cp -vf /usr/bin/arpl-reboot.sh /tmpRoot/usr/bin
   cp -vf /usr/bin/grub-editenv /tmpRoot/usr/bin
@@ -17,10 +17,10 @@ if [ "${1}" = "late" ]; then
     mkdir -p /tmpRoot/usr/syno/etc/esynoscheduler
     cp -vf /addons/esynoscheduler.db /tmpRoot/usr/syno/etc/esynoscheduler/esynoscheduler.db
   fi
-  echo "insert RebootToArpl task to esynoscheduler.db"
+  echo "insert reboottoloader task to esynoscheduler.db"
   export LD_LIBRARY_PATH=/tmpRoot/bin:/tmpRoot/lib
   /tmpRoot/bin/sqlite3 /tmpRoot/usr/syno/etc/esynoscheduler/esynoscheduler.db <<EOF
-DELETE FROM task WHERE task_name LIKE 'RebootToArpl';
-INSERT INTO task VALUES('RebootToArpl', '', 'shutdown', '', 0, 0, 0, 0, '', 0, '/usr/bin/arpl-reboot.sh "config"', 'script', '{}', '', '', '{}', '{}');
+DELETE FROM task WHERE task_name LIKE 'RebootToLoader';
+INSERT INTO task VALUES('RebootToLoader', '', 'shutdown', '', 0, 0, 0, 0, '', 0, '/usr/bin/loader-reboot.sh "config"', 'script', '{}', '', '', '{}', '{}');
 EOF
 fi

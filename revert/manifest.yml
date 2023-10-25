@@ -1,7 +1,7 @@
 version: 1
-name: reboottoarpl
-description: "Add a script to restart to arpl in the DSM scheduled task, making it easy to access arpl without a screen or keyboard."
-# system: true
+name: revert
+description: "Revert addons modifications"
+system: true
 all:
   install-script: "install.sh"
   copy: all

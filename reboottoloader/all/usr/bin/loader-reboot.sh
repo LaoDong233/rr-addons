@@ -12,7 +12,7 @@ fi
 [ -z "${1}" ] && use
 [ "${1}" != "junior" -a "${1}" != "config" ] && use
 echo "Rebooting to ${1} mode"
-echo 1 > /proc/sys/kernel/syno_install_flag
+echo 1 >/proc/sys/kernel/syno_install_flag
 mount /dev/synoboot1 /mnt
 GRUBPATH="$(dirname $(find /mnt/ -name grub.cfg | head -1))"
 ENVFILE="${GRUBPATH}/grubenv"
@@ -20,6 +20,6 @@ ENVFILE="${GRUBPATH}/grubenv"
 
 grub-editenv ${ENVFILE} set next_entry="${1}"
 umount /mnt
-[ -x /usr/syno/sbin/synopoweroff ] && \
+[ -x /usr/syno/sbin/synopoweroff ] &&
   /usr/syno/sbin/synopoweroff -r ||
   reboot
