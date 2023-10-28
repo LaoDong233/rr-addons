@@ -9,7 +9,7 @@
 if [ "${1}" = "late" ]; then
   echo "Installing addon reboottoloader - late"
 
-  cp -vf /usr/bin/arpl-reboot.sh /tmpRoot/usr/bin
+  cp -vf /usr/bin/loader-reboot.sh /tmpRoot/usr/bin
   cp -vf /usr/bin/grub-editenv /tmpRoot/usr/bin
 
   if [ ! -f /tmpRoot/usr/syno/etc/esynoscheduler/esynoscheduler.db ]; then
