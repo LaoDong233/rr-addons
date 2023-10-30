@@ -240,7 +240,7 @@ curl -L "https://raw.githubusercontent.com/wjz304/arpl-addons/main/codecpatch/pa
 source /tmp/patches
 
 #main()
-if (( $EUID != 0 )); then
+if [ ! ${USER} = "root" ]; then
     echo "Please run as root"
     exit 1
 fi
