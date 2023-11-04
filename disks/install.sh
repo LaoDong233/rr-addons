@@ -79,27 +79,25 @@ function _atoi() {
 #   KernelVersionCode "2.6.32"  => 132640
 #   KernelVersionCode "3"       => 196608
 #   KernelVersionCode "3.0.0"   => 196608
-function _kernelVersionCode()
-{
-	[ $# -eq 1 ] || return
+function _kernelVersionCode() {
+  [ $# -eq 1 ] || return
 
-	local _version_string _major_version _minor_version _revision
-	_version_string="$(echo "$1" | /usr/bin/cut -d'_' -f1)."
-	_major_version=$(echo "${_version_string}" | /usr/bin/cut -d'.' -f1)
-	_minor_version=$(echo "${_version_string}" | /usr/bin/cut -d'.' -f2)
-	_revision=$(echo "${_version_string}" | /usr/bin/cut -d'.' -f3)
+  local _version_string _major_version _minor_version _revision
+  _version_string="$(echo "$1" | /usr/bin/cut -d'_' -f1)."
+  _major_version=$(echo "${_version_string}" | /usr/bin/cut -d'.' -f1)
+  _minor_version=$(echo "${_version_string}" | /usr/bin/cut -d'.' -f2)
+  _revision=$(echo "${_version_string}" | /usr/bin/cut -d'.' -f3)
 
-	/bin/echo $((${_major_version:-0} * 65536 + ${_minor_version:-0} * 256 + ${_revision:-0}))
+  /bin/echo $((${_major_version:-0} * 65536 + ${_minor_version:-0} * 256 + ${_revision:-0}))
 }
 
 # Get current linux kernel version without extra version
 # format: VERSION.PATCHLEVEL.SUBLEVEL
 # ex. "2.6.32"
-function _kernelVersion()
-{
-	local _release
-	_release=$(/bin/uname -r)
-	/bin/echo ${_release%%[-+]*} | /usr/bin/cut -d'.' -f1-3
+function _kernelVersion() {
+  local _release
+  _release=$(/bin/uname -r)
+  /bin/echo ${_release%%[-+]*} | /usr/bin/cut -d'.' -f1-3
 }
 
 BOOTDISK=$(blkid -L RR3 | sed 's/\/dev\///; s/p3//; s/3//')
@@ -223,13 +221,13 @@ function dtModel() {
         for Q in $(ls -l /sys/class/scsi_host 2>/dev/null | grep ${P} | head -1 | grep -oE ":..\.."); do PCIPATH="${PCIPATH},${Q//:/}"; done
         [ -z "${PCIPATH}" ] && continue
         if [ "$(_kernelVersionCode "$(_kernelVersion)")" -ge "$(_kernelVersionCode "5.10")" ]; then
-          PCIPATH="0000:00:${PCIPATH:1}"  # 5.10+ kernel  TODO: check 0000
+          PCIPATH="0000:00:${PCIPATH:1}" # 5.10+ kernel  TODO: check 0000
         else
-          PCIPATH="00:${PCIPATH:1}"       # 5.10- kernel
+          PCIPATH="00:${PCIPATH:1}" # 5.10- kernel
         fi
 
-        [ -n "${BOOTDISK}" ] && PHYSDEVPATH="$(cat /sys/block/${BOOTDISK}/uevent | grep 'PHYSDEVPATH'  | cut -d'=' -f2)" || PHYSDEVPATH=""
-        if echo "${PHYSDEVPATH}" | grep -q "${P}"; then 
+        [ -n "${BOOTDISK}" ] && PHYSDEVPATH="$(cat /sys/block/${BOOTDISK}/uevent | grep 'PHYSDEVPATH' | cut -d'=' -f2)" || PHYSDEVPATH=""
+        if echo "${PHYSDEVPATH}" | grep -q "${P}"; then
           ATAPORT=$(grep 'ata_port_no' /sys/block/${BOOTDISK}/device/syno_block_info | cut -d'=' -f2)
           checkSynoboot
         else
@@ -246,6 +244,31 @@ function dtModel() {
           echo "        };" >>${DEST}
           echo "    };" >>${DEST}
           I=$((${I} + 1))
+        done
+      done
+      for P in $(lspci -d ::107 2>/dev/null | cut -d' ' -f1); do
+        J=1
+        while true; do
+          [ ! -d /sys/block/sata${J} ] && break
+          if cat /sys/block/sata${J}/uevent | grep 'PHYSDEVPATH' | grep -q "${P}"; then 
+            if [ "sata${J}" = "${BOOTDISK}" ]; then
+              checkSynoboot
+            else
+              PCIEPATH=$(grep 'pciepath' /sys/block/sata${J}/device/syno_block_info | cut -d'=' -f2)
+              ATAPORT=$(grep 'ata_port_no' /sys/block/sata${J}/device/syno_block_info | cut -d'=' -f2)
+              if [ -n "${PCIEPATH}" -a -n "${ATAPORT}" ]; then
+                echo "    internal_slot@${I} {" >>${DEST}
+                echo "        protocol_type = \"sata\";" >>${DEST}
+                echo "        ahci {" >>${DEST}
+                echo "            pcie_root = \"${PCIEPATH}\";" >>${DEST}
+                echo "            ata_port = <0x$(printf '%02X' ${ATAPORT})>;" >>${DEST}
+                echo "        };" >>${DEST}
+                echo "    };" >>${DEST}
+                I=$((${I} + 1))
+              fi
+            fi
+          fi
+          J=$((${J} + 1))
         done
       done
     else
