@@ -1,6 +1,6 @@
 version: 1
 name: wireless
-description: "Connect WiFi. Please modify "IFNAME" "SSID" "PASSWD" to the required password in the DSM scheduled task and execute it."
+description: "Connect WiFi. Please modify 'IFNAME' 'SSID' 'PASSWD' to the required password in the DSM scheduled task and execute it."
 # system: true
 all:
   install-script: "install.sh"
