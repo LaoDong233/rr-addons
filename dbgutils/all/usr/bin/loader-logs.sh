@@ -22,14 +22,14 @@ mkdir -p "/mnt/p1/logs/${1}"
 cp -vfR "/var/log/"* "/mnt/p1/logs/${1}"
 dmesg >"/mnt/p1/logs/${1}/dmesg.log"
 lsmod >"/mnt/p1/logs/${1}/lsmod.log"
-lspci -nn >"/mnt/p1/logs/${1}/lspci.log" || true
+lsusb >"/mnt/p1/logs/${1}/lsusb.log"
+lspci -Qnnk >"/mnt/p1/logs/${1}/lspci.log" || true
 sysctl -a >"/mnt/p1/logs/${1}/sysctl.log" || true
 journalctl >"/mnt/p1/logs/${1}/journalctl.log" || true
 ls -l /dev/ >"/mnt/p1/logs/${1}/disk-dev.log" || true
 ls -l /dev/disk/by-id/ >"/mnt/p1/logs/${1}/disk-by-id.log" || true
 ls -l /sys/class/scsi_host >"/mnt/p1/logs/${1}/disk-scsi_host.log" || true
 ls -l /sys/class/net/*/device/driver >"/mnt/p1/logs/${1}/net-driver.log" || true
-ls -l /sys/class/net/*/device/driver/module >"/mnt/p1/logs/${1}/net-module.log" || true
 cat /sys/block/s*/device/syno_block_info >"/mnt/p1/logs/${1}/disk-syno_block_info.log" || true
 [ -f "/addons/addons.sh" ] && cp -f "/addons/addons.sh" "/mnt/p1/logs/${1}/addons.sh" || true
 [ -f "/addons/model.dts" ] && cp -f "/addons/model.dts" "/mnt/p1/logs/${1}/model.dts" || true
