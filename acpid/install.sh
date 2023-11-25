@@ -35,11 +35,9 @@ if [ "${1}" = "late" ]; then
     echo "After=multi-user.target"               >>${DEST}
     echo                                         >>${DEST}
     echo "[Service]"                             >>${DEST}
-    echo "Type=forking"                          >>${DEST}
     echo "Restart=always"                        >>${DEST}
     echo "RestartSec=30"                         >>${DEST}
-    echo "PIDFile=/var/run/acpid.pid"            >>${DEST}
-    echo "ExecStartPre=-/sbin/modprobe button"    >>${DEST}
+    echo "ExecStartPre=-/sbin/modprobe button"   >>${DEST}
     echo "ExecStart=/usr/sbin/acpid -f"          >>${DEST}
     echo "ExecStopPost=-/sbin/modprobe -r button" >>${DEST}
     echo                                         >>${DEST}
