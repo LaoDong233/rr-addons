@@ -151,7 +151,7 @@ jobs:
           git clone -c http.sslVerify=false --single-branch https://github.com/systemd/systemd.git /tmp/systemd
           git clone -c http.sslVerify=false --single-branch https://github.com/eudev-project/eudev.git /tmp/eudev
           cd /tmp/eudev
-          git checkout v3.2.12
+          git checkout v3.2.14
 
           # error: 'for' loop initial declarations are only allowed in C99 or C11 mode
           if [ "${{ matrix.version }}" = "6.2" ]; then
